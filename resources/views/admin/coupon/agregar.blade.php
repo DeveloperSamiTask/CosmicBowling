@@ -9,157 +9,122 @@
             Agregar Cupones
         </h4>
 
+        {{-- /*
+            debe copiar parte de esto
+        */ --}}
 
-        <!-- Invoice List Table -->
-        <div class="card">
-            <div class="card-datatable table-responsive">
-                <table class="invoice-list-table table">
-                    <thead class="table-light">
-                        <tr>
-                            <th></th>
-                            <th>Código</th>
-                            <th>Descripción</th>
-                            <th>Disponibles</th>
-                            <th>Descuento</th>
-                            <th>Cantidad</th>
-                            <th class="text-truncate">Fecha Limite</th>
-                            <th>Estado</th>
-                            <th class="cell-fit">Acciones</th>
-                        </tr>
-                    </thead>
-                </table>
-            </div>
-        </div>
+        <style>
+            .main-container-socio {
+                margin-top: 80px;
+                /* Esto empuja el contenido hacia abajo del navbar */
+                min-height: 80vh;
+                /* Asegura que ocupe espacio hacia abajo */
+            }
 
-    </div>
+            .card {
+                background-color: rgba(255, 255, 255, 0.9);
+                /* Un poco de transparencia para que se vea el fondo */
+                border: none;
+                border-radius: 15px;
+            }
 
-    <!-- / Content -->
+            .card-custom-bg {
+                /* Fondo blanco con 90% de opacidad */
+                background-color: rgba(255, 255, 255, 0.9) !important;
+                /* Un ligero desenfoque al fondo para que se vea más moderno (opcional) */
+                backdrop-filter: blur(5px);
+                border-radius: 15px;
+                border: none;
+            }
 
-    <!-- Modal -->
-    <div class="modal fade" id="coupon-modal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-lg modal-simple modal-dialog-centered">
-            <div class="modal-content p-3 p-md-5">
-                <div class="modal-body py-3 py-md-0">
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    <div class="text-center mb-4">
-                        <h3 class="mb-2" id="titleModal">Crear Cupón</h3>
+            /* Para que los textos resalten mejor sobre el blanco */
+            .info-list p {
+                color: #333 !important;
+            }
+
+            .img-cupon-container {
+                height: 300px;
+                /* Aquí controlas el tamaño estándar (puedes cambiarlo a 250px, 400px, etc.) */
+                width: 100%;
+                overflow: hidden;
+                /* Corta lo que sobre para que no se desborde */
+                border-radius: 10px;
+                margin-bottom: 1rem;
+            }
+
+            .img-cupon-container img {
+                width: 100%;
+                height: 100%;
+                object-fit: contain;
+                /* ¡Aquí está el truco! */
+                object-position: center;
+                background-color: transparent;
+            }
+        </style>
+
+        <!-- Page container -->
+        <div class="container main-container-socio">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="card card-custom-bg p-4">
+                        <h4 class="mb-4">Subir Cupones del Mes</h4>
+
+                        <form action="{{ route('coupons.subirCupon') }}" method="POST" enctype="multipart/form-data">
+                            @csrf
+
+                            <div class="row">
+                                @php
+                                    // Definimos los servicios tal cual están en tu BD
+                                    $servicios = [
+                                        1 => 'Pistas Generales',
+                                        2 => 'Pista VIP',
+                                        3 => 'Pista Easy Duo VIP',
+                                        4 => 'Billar',
+                                    ];
+                                @endphp
+
+                                @foreach ($servicios as $id => $nombre)
+                                    <div class="col-md-6 mb-4">
+                                        <div class="card shadow-sm">
+                                            <div class="card-body">
+                                                <label class="form-label fw-bold">Cupón para: {{ $nombre }} <span
+                                                        class="text-danger">*</span></label>
+
+                                                <input type="file" name="cupones[{{ $id }}]"
+                                                    class="form-control" accept="image/*" required>
+
+                                                {{-- Vista previa dinámica --}}
+                                                @if ($cuponesActuales && isset($cuponesActuales[$id]))
+                                                    <div class="mt-2 text-center">
+                                                        <small class="text-muted d-block mb-1">Cupón actual de este
+                                                            mes:</small>
+                                                        <img src="{{ url($cuponesActuales[$id]->path_cupon) }}"
+                                                            class="img-fluid rounded border" style="max-height:150px;">
+                                                    </div>
+                                                @endif
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+
+                            <button type="submit" class="btn btn-primary btn-lg w-100 shadow">
+                                <i class="mdi mdi-upload me-1"></i> Guardar Todos los Cupones
+                            </button>
+                        </form>
                     </div>
-                    <form id="coupon-form" class="row g-4">
-                        @csrf
-                        <input type="hidden" name="idCoupon" id="idCoupon">
-                        <div class="col-12 col-md-5">
-                            <div class="form-floating form-floating-outline">
-                                <select id="typeD" name="typeD" class="form-select select2"
-                                    aria-label="Default select example">
-                                    <option value="1" selected>Código promocional</option>
-                                </select>
-                                <label for="typeD">Selecciona tipo de descuento</label>
-                            </div>
-                        </div>
-                        <div class="col-12 col-md-7">
-                            <div class="form-floating form-floating-outline">
-                                <select id="subcategories" name="subcategories[]" class="select2 form-select"
-                                    data-placeholder="Selecciona Subcategorias" multiple data-allow-clear="true">
-                                    @foreach ($categories as $category)
-                                        <optgroup label="{{ $category->name_category }}">
-                                            @foreach ($category->subcategories as $subcategory)
-                                                <option value="{{ $subcategory->id_subcategory }}">
-                                                    {{ $subcategory->name_subcategory }}</option>
-                                            @endforeach
-                                        </optgroup>
-                                    @endforeach
-                                </select>
-                                <label for="subcategories">Subcategorias</label>
-                            </div>
-                        </div>
-                        <div class="col-12 col-md-6">
-                            <div class="input-group input-group-merge">
-                                <div class="form-floating form-floating-outline">
-                                    <input type="text" class="form-control" id="code" name="code" placeholder="">
-                                    <label for="code">Código de cupón</label>
-                                </div>
-                                <span class="input-group-text cursor-pointer btn-codeCoupon"><i
-                                        class="mdi mdi-sync"></i></span>
-                            </div>
-                        </div>
-
-                        <div class="col-12 col-md-6">
-                            <div class="input-group input-group-merge">
-                                <span class="input-group-text"><i
-                                        class="mdi mdi-numeric-9-plus-box-multiple-outline"></i></span>
-
-                                <div class="form-floating form-floating-outline">
-                                    <input type="text" class="form-control" id="quantity" name="quantity"
-                                        placeholder="">
-                                    <label for="quantity">Cantidad Cupones</label>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-12 col-md-6">
-                            <div class="form-floating form-floating-outline">
-                                <select id="typeC" name="typeC" class="select2 form-select"
-                                    data-allow-clear="true">
-                                    <option value="percentage">Descuento Porcentual (%)</option>
-                                    <option value="fixed">Precio Fijado (S/.)</option>
-                                </select>
-                                <label for="typeC">Selecciona Tipo Cupón</label>
-                            </div>
-                        </div>
-
-                        <div class="col-12 col-md-6">
-                            <div class="input-group input-group-merge">
-                                <span class="input-group-text iconC"><i class="mdi mdi-percent"></i></span>
-
-                                <div class="form-floating form-floating-outline">
-                                    <input type="text" class="form-control" id="discount" name="discount"
-                                        placeholder="" aria-describedby="discount">
-                                    <label for="discount">Descuento</label>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-12 col-md-6">
-                            <div class="form-floating form-floating-outline">
-                                <input type="text" class="form-control" id="startDate" name="startDate"
-                                    placeholder="Fecha inicio">
-                                <label for="eventStartDate">Fecha Inicio</label>
-                            </div>
-                        </div>
-
-                        <div class="col-12 col-md-6">
-                            <div class="form-floating form-floating-outline">
-                                <input type="text" class="form-control" id="endDate" name="endDate"
-                                    placeholder="Fecha fin">
-                                <label for="eventEndDate">Fecha Fin</label>
-                            </div>
-                        </div>
-                        <div class="col-12 col-md-12">
-                            <div class="form-floating form-floating-outline">
-                                <textarea id="description" name="description" rows="3" class="form-control"></textarea>
-                                <label for="description">Descripción</label>
-
-                            </div>
-                        </div>
-
-                        <div class="col-12 text-center">
-                            <button type="submit" class="btn btn-primary me-sm-3 me-1">Guardar</button>
-                            <button type="reset" class="btn btn-outline-secondary" data-bs-dismiss="modal"
-                                aria-label="Close">Cancelar</button>
-                        </div>
-                    </form>
                 </div>
             </div>
         </div>
-    </div>
-@endsection()
+    @endsection()
 
-@section('styles')
-    <link rel="stylesheet" href="{{ asset('vendor/libs/flatpickr/flatpickr.css') }}">
-@endsection()
+    @section('styles')
+        <link rel="stylesheet" href="{{ asset('vendor/libs/flatpickr/flatpickr.css') }}">
+    @endsection()
 
-@section('scripts')
-    <!-- Page JS -->
-    <script src="{{ asset('vendor/libs/autosize/autosize.js') }}"></script>
-    <script src="{{ asset('vendor/libs/flatpickr/flatpickr.js') }}"></script>
-    <script src="{{ asset('js/pages/coupon.js') }}"></script>
-@endsection
+    @section('scripts')
+        <!-- Page JS -->
+        <script src="{{ asset('vendor/libs/autosize/autosize.js') }}"></script>
+        <script src="{{ asset('vendor/libs/flatpickr/flatpickr.js') }}"></script>
+        <script src="{{ asset('js/pages/coupon.js') }}"></script>
+    @endsection
