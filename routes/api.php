@@ -4,8 +4,7 @@ use App\Http\Controllers\Api\Coupon;
 use App\Http\Controllers\Frontend\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-
-/*
+ /*
 |--------------------------------------------------------------------------
 | API Routes
 |--------------------------------------------------------------------------
@@ -24,8 +23,11 @@ Route::get('/client/check-authentication', function () {
 });
 
 Route::get('coupon/{code}', [Coupon::class, 'show']);
+Route::post('/insertSocio', [Client::class, 'insertSocio'])->name('insertSocio');
+Route::post('/renewPartner', [Client::class, 'renew'])->name('renew');
 Route::post('client/register', [Client::class, 'store']);
 Route::post('client/login', [Client::class, 'login']);
 Route::post('client/recover', [Client::class, 'recover']);
 Route::post('client/reset', [Client::class, 'reset']);
+
 Route::middleware('auth:client')->post('client/logout', [Client::class, 'logout']);

@@ -122,6 +122,11 @@
             animation: spinner .75s linear infinite;
         }
 
+        header.navbar {
+            background-color: #ffffff !important;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
         [data-bs-theme="dark"] .page-spinner {
             background-color: rgba(255, 255, 255, .25);
         }
@@ -209,18 +214,17 @@
         <!-- Navbar. Remove 'fixed-top' class to make the navigation bar scrollable with the page -->
         <header class="navbar navbar-expand-lg fixed-top">
             <div class="container">
-
                 <!-- Navbar brand (Logo) -->
-                <a class="navbar-brand pe-sm-3" href="{{ route('home.index') }}">
+                {{--  --}}
+                <a class="navbar-brand pe-sm-3">
                     <span class="text-primary flex-shrink-0 me-2">
                         <img src="{{ asset('frontend/img/app-icons/logo.svg') }}" width="95" height="92"
                             alt="Logo Cosmic Bowling">
-
                     </span>
                     <span class="d-none d-sm-inline"></span>
                 </a>
                 <!-- Theme switcher -->
-                <div class="form-check form-switch mode-switch order-lg-2 me-3 me-lg-4 ms-auto" data-bs-toggle="mode">
+                {{-- <div class="form-check form-switch mode-switch order-lg-2 me-3 me-lg-4 ms-auto" data-bs-toggle="mode">
                     <input class="form-check-input" type="checkbox" id="theme-mode">
                     <label class="form-check-label" for="theme-mode">
                         <i class="ai-sun fs-lg"></i>
@@ -228,7 +232,7 @@
                     <label class="form-check-label" for="theme-mode">
                         <i class="ai-moon fs-lg"></i>
                     </label>
-                </div>
+                </div> --}}
 
                 <div id="account-info" class="nav align-items-center order-lg-3 ms-n1 me-3 me-sm-0">
                     @if (Auth::guard('client')->check())
@@ -252,10 +256,13 @@
                                 <a class="dropdown-item" href="{{ route('client.profile') }}"><i
                                         class="ai-user-check fs-lg opacity-70 me-2"></i>Perfil</a>
                                 <div class="dropdown-divider"></div>
-                                <button type="button" class="dropdown-item" id="logout-button">
-                                    <i class="ai-logout fs-lg opacity-70 me-2"></i>
-                                    Cerrar Sesión
-                                </button>
+                                <form method="POST" action="{{ route('client.logout') }}">
+                                    @csrf
+                                    <button type="submit" class="dropdown-item">
+                                        <i class="ai-logout fs-lg opacity-70 me-2"></i>
+                                        Cerrar Sesión
+                                    </button>
+                                </form>
                             </div>
                         </div>
                     @else
@@ -276,12 +283,15 @@
 
                 <!-- Navbar collapse (Main navigation) -->
                 <nav class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav navbar-nav-scroll me-auto" style="--ar-scroll-height: 520px;">
+                    <ul class="navbar-nav navbar-nav-scroll me-auto" style="--ar-scroll-height: 220px;">
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ url('/') }}">Inicio</a>
+                            <a class="nav-link" href="{{ route('client.profileSocio') }}">Datos del socio</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ route('socios') }}">Socios</a>
+                            <a class="nav-link" href="{{ route('client.renovar') }}">Renovar Membresia</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('client.promociones') }}">Promociones</a>
                         </li>
                         @if (Auth::guard('client')->check())
                             @php
@@ -292,7 +302,7 @@
                                 <!-- Mostrar el enlace de cuenta cuando no está autenticado -->
                                 <a class="nav-link" href="{{ route('client.login') }}"
                                     role="button
-                            aria-label="Account">
+                                    aria-label="Account">
                                     <i class="ai-user fs-lg me-2"></i> Iniciar Sesión
                                 </a>
                             </li>
@@ -309,7 +319,7 @@
     </main>
 
 
-    <!-- Footer -->
+    {{-- <!-- Footer -->
     <footer class="footer bg-dark position-relative py-5" data-bs-theme="dark">
         <div class="position-absolute top-0 start-0 w-100 h-100" style="background-color: rgba(255, 255, 255, .03);">
         </div>
@@ -416,7 +426,7 @@
                     rel="noopener">Cosmic Bowling</a>
             </p>
         </div>
-    </footer>
+    </footer> --}}
 
 
     <!-- Back to top button -->
@@ -442,7 +452,6 @@
 
     <!-- Bootstrap + Theme scripts -->
     <script src="{{ asset('frontend/js/theme.min.js') }}"></script>
-
 
 </body>
 

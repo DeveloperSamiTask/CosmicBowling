@@ -395,7 +395,7 @@
                                                                 <td align="left" style="padding:20px;Margin:0">
                                                                     <h3
                                                                         style="Margin:0;line-height:34px;mso-line-height-rule:exactly;font-family:Imprima, Arial, sans-serif;font-size:28px;font-style:normal;font-weight:bold;color:#2D3142">
-                                                                        Bienvenido,&nbsp;{{$name}}</h3>
+                                                                        Bienvenido,&nbsp;{{ $name }}</h3>
                                                                     <p
                                                                         style="Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-family:Imprima, Arial, sans-serif;line-height:27px;color:#2D3142;font-size:18px">
                                                                         <br>
@@ -410,6 +410,10 @@
                                                                         paso agrega seguridad adicional a su cuenta al
                                                                         verificar que es el propietario de este correo
                                                                         electrónico.</p>
+                                                                        <br>
+                                                                        Tus credenciales como socio son :
+                                                                        <p>{{$nTarjNumb}}</p>
+                                                                        {{-- <p>{{$fechaNacimiento}}</p> --}}
                                                                 </td>
                                                             </tr>
                                                         </table>

@@ -23,13 +23,35 @@ class Client extends Authenticatable
         'phone_client',
         'birthday_client',
         'address_client',
-        'password_client'
+        'password_client',
+
+        //nuevos campos : borrar validacion
+        'validacion',
+        'socio',
+
+
     ];
 
     protected $hidden = [
         'password_client',
         'remember_token'
     ];
+
+    // Cupones impresos por este cliente
+    public function cupones()
+    {
+        return $this->hasMany(PrintCupon::class, 'client_id', 'id_client');
+    }
+
+    public function partner()
+    {
+        // Un cliente tiene un registro de socio
+        return $this->hasOne(ClientSocio::class, 'client_id', 'id_client');
+    }
+
+    // public function proxy() {
+    //     return $this->belongsTo(Proxy::class, 'proxy_id', 'proxy_id');
+    // }
 
     public function sunatTypedoc()
     {
@@ -50,6 +72,8 @@ class Client extends Authenticatable
     {
         return Hash::check($password, $this->password_client);
     }
+
+
 
 
     static public function getClients()

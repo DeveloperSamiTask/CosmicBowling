@@ -6,7 +6,7 @@
         <!-- Clients List Table -->
         <div class="card">
             <div class="card-header border-bottom">
-                <h5 class="card-title">No Socios</h5>
+                <h5 class="card-title">Socios</h5>
                 <div class="d-flex justify-content-between align-items-center row py-3 gap-3 gap-md-0">
                     <div class="col-md-4"></div>
                     <div class="col-md-4 user_plan"></div>
@@ -21,10 +21,15 @@
                             <th>Nombres / Apellidos</th>
                             <th>Tipo Documento</th>
                             <th>Número de Documento</th>
-                            <th>Email</th>
-                            <th>Número Cliente</th>
-                            <th>Distrito</th>
+
+                            <th>F. Inicio</th>
+                            <th>F. Fin</th>
+
+                            <th>Email Socio</th>
+                            <th>Teléfono</th>
+                            <th>F. Afiliacion</th>
                             <th>Estado</th>
+                            {{-- Apoderado : nombre + apellido + DNI --}}
                         </tr>
                     </thead>
                 </table>
@@ -266,8 +271,8 @@
                         </div>
                         <div class="col-4">
                             <div class="form-floating form-floating-outline">
-                                <input disabled type="text" class="form-control flatpickr-date" placeholder="YYYY-MM-DD"
-                                    name="renewEnddate" id="renewEnddate">
+                                <input  type="text" class="form-control flatpickr-date"
+                                    placeholder="YYYY-MM-DD" name="renewEnddate" id="renewEnddate" readonly>
                                 <label for="renewEnddate">Vencimiento</label>
                             </div>
                         </div>
@@ -454,8 +459,6 @@
             </div>
         </div>
     </div>
-
-
 @endsection()
 
 @section('styles')
@@ -473,5 +476,5 @@
     <script src="{{ asset('vendor/libs/@form-validation/umd/plugin-bootstrap5/index.min.js') }}"></script>
     <script src="{{ asset('vendor/libs/@form-validation/umd/plugin-auto-focus/index.min.js') }}"></script>
 
-    <script src="{{ asset('js/pages/clients.js') }}"></script>
+    <script src="{{ asset('js/pages/clientsSocio.js') }}"></script>
 @endsection

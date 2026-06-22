@@ -6,6 +6,7 @@
 
         <div class="card mb-4">
             <div class="card-widget-separator-wrapper">
+                {{-- CABECERA --}}
                 <div class="card-body card-widget-separator" id="stadistics">
                     <div class="row gy-4 gy-sm-1">
                         <div class="col-sm-6 col-lg-3">
@@ -76,6 +77,7 @@
                         </div>
                     </div>
                 </div>
+
             </div>
         </div>
 

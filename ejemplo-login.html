@@ -1,0 +1,330 @@
+<?php
+  session_start();
+
+  if(isset($_SESSION['session_socio'])){
+      header("Location: socios.php");
+    }
+ ?>
+
+<!DOCTYPE html>
+<html lang="ES">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <!-- Required meta tags -->
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous" />
+    <link rel="stylesheet" href="css/style.css" />
+    <link href="https://fonts.googleapis.com/css?family=Bebas+Neue&display=swap" rel="stylesheet" />
+    <link rel="shortcut icon" href="imgclub/favicon.ico" />
+    <script src="https://kit.fontawesome.com/c51b016b55.js" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+
+    <title>CLUB GRANJA VILLA</title>
+</head>
+<style type="text/css">
+    @font-face {
+        font-family: "riffic_freebold";
+        src: url("fonts/rifficfree-bold-webfont.woff2") format("woff2"),
+            url("fonts/rifficfree-bold-webfont.woff") format("woff");
+        font-weight: normal;
+        font-style: normal;
+    }
+
+    .textotitulo {
+        font-family: "riffic_freebold", sans-serif;
+        font-weight: 100;
+        font-size: 26px;
+    }
+
+    .container,
+    .row {
+        height: 100%;
+        min-height: 100%;
+    }
+
+    html,
+    body {
+        height: 100%;
+        background: url("imgclub/Pantalla.jpg");
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+
+    .center-both {
+        display: flex;
+        align-items: center;
+        /* centra verticalmente */
+        justify-content: center;
+        /* centra horizontalmente */
+        text-align: center;
+    }
+
+    .modal-header {
+        position: relative;
+    }
+
+    .modal-header h4,
+    h5 {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        top: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    p {
+        margin: 0 0 10px;
+    }
+</style>
+
+<script language="javascript">
+    function Valida_Datos() {
+        if (document.form_login.txt_usuario.value.length == 0) {
+            alert("Ingrese el Nombre del Usuario");
+            document.form_login.txt_usuario.focus();
+            return;
+        }
+        if (document.form_login.txt_psw1.value.length == 0) {
+            alert("Ingrese su Clave");
+            document.form_login.txt_psw1.focus();
+            return;
+        }
+        document.form_login.submit();
+    }
+
+    $(document).ready(function () {
+        $("#myModal").modal("show");
+    });
+
+    function iSubmitEnter(oEvento, oFormulario) {
+        var iAscii;
+
+        if (oEvento.keyCode) iAscii = oEvento.keyCode;
+        else if (oEvento.which) iAscii = oEvento.which;
+        else return false;
+
+        if (iAscii == 13) oFormulario.submit();
+
+        return true;
+    }
+    //-->
+</script>
+
+<body class="login">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="https://lagranjavilla.com">
+                <img src="imgclub/logo.png" width="80" height="80" alt="" /></a>
+            <h2 class="textotitulo">CLUB GRANJA</h2>
+
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="row justify-content-center align-items-center">
+            <form method="post" action="proc_login.php" target="_parent" name="form_login" class="form">
+                <h2 class="textotitulo">Ingrese N° de Tarjeta</h2>
+                <br />
+                <div align="left" class="form-group">
+                    <div class="form-row">
+                        <div class="input-group form-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="far fa-id-card"></i></span>
+                            </div>
+                            <input type="text" class="form-control" name="txt_usuario"
+                                onkeypress="iSubmitEnter(event, document.form_login)" placeholder="N° Tarjeta"
+                                required />
+                        </div>
+                    </div>
+                </div>
+                <h2 class="textotitulo">Fecha de nacimiento</h2>
+                <br />
+                <div class="form-row">
+                    <div class="form-group col-md-4">
+                        <div class="input-group form-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+                            </div>
+                            <input name="txt_psw1" type="text" id="txt_psw1" formaction="" class="form-control"
+                                placeholder="Día" required onkeypress="iSubmitEnter(event, document.form_login)" />
+                        </div>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <div class="input-group form-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+                            </div>
+                            <input name="txt_psw2" type="text" id="txt_psw2" class="form-control" placeholder="Mes"
+                                required onkeypress="iSubmitEnter(event, document.form_login)" />
+                        </div>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <div class="input-group form-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+                            </div>
+                            <input name="txt_psw3" type="text" id="txt_psw3" class="form-control" placeholder="Año"
+                                required onkeypress="iSubmitEnter(event, document.form_login)" />
+                        </div>
+                    </div>
+                </div>
+
+                <a class="btn btn-block" href="javascript:Valida_Datos();" style="
+              color: #fff;
+              background-color: #495057;
+              border-color: #495057;">
+                    INGRESAR
+                </a>
+                <br />
+                <br />
+
+            <button type="button" class="btn btn-block" data-toggle="modal" data-target="#myModal" style="
+              color: #fff;
+              background-color: #282727;
+              border-color: #282727;">
+                    Terminos y Condiciones CLUB GRANJA VILLA
+                </button>
+            </form>
+        </div>
+
+        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+            aria-hidden="true">
+            <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+                <div class="modal-content body">
+                    <div class="modal-header center-both">
+                        <h4 class="modal-title responsive-title w-100 text-center " id="exampleModalCenterTitle">
+                            CLUB GRANJA VILLA
+                        </h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p class="text-center">
+                            <strong style="font-size:medium;">¡ÚNETE A NUESTRO CLUB Y DISFRUTA DE GRANDES BENEFICIOS!
+                                🌟</strong>
+                        </p>
+                        <p>
+                            La afiliación es para todo un año. Aquí te contamos cómo puedes
+                            inscribirte y aprovechar nuestras promociones especiales:
+
+                        </p>
+
+                        <h6><strong>Beneficios del Socio:</strong></h6>
+                        <ul>
+                            <li>
+                                🎉 <strong>Entrada GRATIS por tu cumpleaños:</strong> ¡Celebra con nosotros! Obtén tu
+                                entrada gratis en el mismo día de tu cumpleaños, ó 6 días antes ó 6 días después.
+                            </li>
+                            <li>
+                                🌟️ <strong>Entrada GRATIS en tu Semana de Socio:</strong> Cada
+                                año, podrás disfrutar de una entrada gratis en uno de los
+                                siguientes meses: Febrero, Mayo, Julio u Octubre, según el
+                                último dígito de tu código de socio, este será “tu número mágico”.
+
+                            </li>
+                            <li>
+                                🔔 <strong>Promociones exclusivas:</strong> Con tu código de socio,
+                                accede a promociones especiales y podrás visitarnos con tus amigos
+                                o familia.
+
+                            </li>
+                        </ul>
+
+                        <h6><strong>¿Qué incluye la entrada?</strong></h6>
+                        <p>La entrada incluye, ingreso ilimitado a:</p>
+                        <ul>
+                            <li>🎢 Juegos Mecánicos</li>
+                            <li>💧 Juegos Acuáticos</li>
+                            <li>🐐 Granja Interactiva</li>
+                            <li>🦚 Bosque de las Aves</li>
+                            <li>🌾 Biohuerto y Vivero</li>
+                            <li>🦕 Zona de Dinosaurios</li>
+                            <li>👶 Juegos para bebés</li>
+                        </ul>
+                        <p>Disfruta de 35 mil metros de FULL DIVERSIÓN !! 🌟😊</p>
+                        <p><strong>En verano, podrás también disfrutar de:</strong></p>
+                        <ul>
+                            <li>🌊 Piscina con olas</li>
+                            <li>💦 Piscinas dinámicas para niños y adultos</li>
+                        </ul>
+
+                        <h6><strong>¿Cómo Afiliarte?</strong></h6>
+                        <p>Para convertirte en socio del “Club de La Granja Villa” solo
+                            tienes que seguir estos sencillos pasos:</p>
+                        <ol>
+                            <li>
+                                <strong>Afíliate</strong> en nuestras instalaciones o envía un correo electrónico a:
+                                <strong>atencionalcliente@lagranjavilla.com</strong>
+                            </li>
+                            <li><strong>Costo de afiliación:</strong> S/. 25 al año, lo que
+                                te da acceso a todos los beneficios durante ese periodo.</li>
+                            <small>(El costo del dispositivo inteligente no está incluido en la afiliación).</small>
+                        </ol>
+
+
+                        <h6><strong>¿Cuándo puedes empezar a disfrutar de los beneficios?</strong></h6>
+                        <p>Una vez te afilies, podrás acceder a todos los beneficios 48 horas después de tu afiliación.
+                        </p>
+
+                        <h6><strong>¿Cómo utilizar tus beneficios?</strong></h6>
+                        <p>El día de tu visita, recuerda traer:</p>
+                        <ul>
+                            <li>Tu DNI físico.</li>
+                            <li>Código de socio vigente.</li>
+                            <li>
+                                Dispositivo inteligente (Sino cuentas con dispositivo inteligente
+                                lo puedes comprar en el mismo parque).
+
+                            </li>
+                        </ul>
+
+                        <p>
+                            ¡Y listo! Podrás disfrutar de todas las ventajas que ofrece ser parte de nuestro club. 🤗
+                        </p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal" style="
+                  color: #fff;
+                  background-color: #206219;
+                  border-color: #206219;
+                ">
+                            Ya soy soci@
+                        </button>
+                        <a href="mailto:atencionalcliente@lagranjavilla.com?subject=QUIERO%20SER%20SOCIO"
+                            class="btn btn-secondary" style="
+    color: #fff;
+    background-color: #eab705;
+    border-color: #eab705;
+  ">
+                            Quiero ser soci@
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>

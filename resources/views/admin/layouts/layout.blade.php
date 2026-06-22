@@ -180,10 +180,23 @@
                         </li>
 
                         <li class="menu-item">
-                            <a href="{{ route('clients.index') }}" class="menu-link">
+                            <a href="javascript:void(0);" class="menu-link menu-toggle">
                                 <i class="menu-icon tf-icons mdi mdi-account-supervisor-circle"></i>
                                 <div data-i18n="Clients">Clientes</div>
                             </a>
+
+                            <ul class="menu-sub">
+                                <li class="menu-item">
+                                    <a href="{{ route('clients.index') }}" class="menu-link">
+                                        <div data-i18n="No Socio">No Socio</div>
+                                    </a>
+                                </li>
+                                <li class="menu-item">
+                                    <a href="{{ route('clients.indexSocio') }}" class="menu-link">
+                                        <div data-i18n="Socios">Socios</div>
+                                    </a>
+                                </li>
+                            </ul>
                         </li>
 
 

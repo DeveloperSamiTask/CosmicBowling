@@ -33,7 +33,7 @@
 
                             <nav class="nav flex-column">
                                 <a class="nav-link fw-semibold py-2 px-0" href="javascript:void(0)" id="logoutbtn">
-                                    <i class="ai-logout fs-5 opacity-60 me-2"></i> 
+                                    <i class="ai-logout fs-5 opacity-60 me-2"></i>
                                     Cerrar sesión
                                 </a>
                             </nav>

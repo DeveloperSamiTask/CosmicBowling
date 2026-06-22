@@ -12,9 +12,7 @@ use App\Http\Controllers\Admin\OrdersController;
 use App\Http\Controllers\Admin\ProductsController;
 use App\Http\Controllers\Admin\SubCategoriesController;
 use App\Http\Controllers\Admin\UserController;
-use App\Models\Admin\Coupons;
-use App\Models\Admin\Order;
-use Spatie\Permission\Contracts\Role;
+use App\Http\Controllers\Frontend\Client;
 
 /*
 |--------------------------------------------------------------------------
@@ -87,10 +85,16 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('statusHoliday', 'store');
         Route::post('validateHoliday', 'validateHoliday');
     });
-
+    /* */
     Route::controller(ClientController::class)->group(function ($route) {
         Route::get('Clientes', 'index')->name('clients.index');
+        Route::get('ClientesSocio', 'indexSocio')->name('clients.indexSocio');
         Route::get('tableClients', 'show');
+        Route::get('tableClientsSocio', 'showSocio');
+        Route::post('searchPartner', 'search');
+        Route::post('renewPartner', 'renew');
+        Route::post('updatePartner', 'update');
+        Route::post('insertSocio', 'insert');
     });
 
     Route::controller(OrdersController::class)->group(function ($route) {
@@ -107,4 +111,6 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('Users/show', 'show');
         Route::post('Users/add', 'store');
     });
+
+    Route::post('/insertSocio', [Client::class, 'insertSocio'])->name('insertSocio');
 });

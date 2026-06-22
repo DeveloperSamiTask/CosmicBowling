@@ -27,17 +27,21 @@ $(function () {
             })),
         s.length &&
         (e = s.DataTable({
-            ajax: "tableClients",
-            columns: [
-                { data: "id" },
-                { data: "names" },
-                { data: "type_doc" },
-                { data: "number_doc" },
-                { data: "email" },
-                { data: "phone" },
-                { data: "address" },
-                { data: "status" },
-            ],
+            ajax: "/be/tableClientsSocio",
+           columns: [
+        { data: "id" },
+        { data: "names" },
+        { data: "type_doc" },
+        { data: "number_doc" },
+
+        { data: "dEmisDate" },
+        { data: "dCaduDate" },
+
+        { data: "confirmation_email" },
+        { data: "phone_number" },
+        { data: "affiliation" },
+        { data: "validado" },
+    ],
             columnDefs: [
                 {
                     className: "control",
@@ -50,7 +54,7 @@ $(function () {
                     },
                 },
                 {
-                    targets: 7,
+                    targets: 9,
                     render: function (e, t, a, n) {
                         return e === "Validado"
                             ? "<div class='d-inline-flex' data-bs-toggle='tooltip' data-bs-html='true' title='Validado " +
@@ -259,24 +263,24 @@ $(function () {
                         },
                     ],
                 },
-                {
-                    text: '<i class="mdi mdi-plus me-1"></i> Agregar Socio',
-                    className: 'btn btn-primary waves-effect waves-light',
-                    attr: {
-                        'data-bs-toggle': 'modal',
-                        'data-bs-target': '#addNewCoupon'
-                    }
-                }
                 // {
-                //     text: '<i class="mdi mdi-plus me-1"></i> Renovar Socio',
+                //     text: '<i class="mdi mdi-plus me-1"></i> Agregar Socio',
                 //     className: 'btn btn-primary waves-effect waves-light',
                 //     attr: {
                 //         'data-bs-toggle': 'modal',
-                //         'data-bs-target': '#renew-modal'
+                //         'data-bs-target': '#addNewCoupon'
                 //     }
-                // }
+                // },
+                {
+                    text: '<i class="mdi mdi-plus me-1"></i> Renovar Socio',
+                    className: 'btn btn-primary waves-effect waves-light',
+                    attr: {
+                        'data-bs-toggle': 'modal',
+                        'data-bs-target': '#renew-modal'
+                    }
+                }
                 , {
-                    text: '<i class="mdi mdi-plus me-1"></i> Editar Cliente',
+                    text: '<i class="mdi mdi-plus me-1"></i> Editar Socio',
                     className: 'btn btn-primary waves-effect waves-light',
                     attr: {
                         'data-bs-toggle': 'modal',
@@ -398,7 +402,6 @@ $(function () {
                     "form-select-sm"
                 );
         }, 300);
-
 
 
   // ---------------- nueva logica
@@ -1069,7 +1072,7 @@ $(function () {
                 $("#editpattername").val(data.lastname_pat);
                 $("#editmattername").val(data.lastname_mat);
                 $("#editmail").val(data.email_client);
-                $("#editphone").val(data.phone_client);
+                $("#editphone").val(data.phone_client );
                 $("#editaddress").val(data.address_client);
 
                 // Formatear la fecha de nacimiento
