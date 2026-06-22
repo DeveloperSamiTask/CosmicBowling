@@ -785,8 +785,6 @@
                             la zona de billar o arcade).</li>
                         <li>Nuestro personal realizará una inspección de todas las mochilas, bolsos, morrales y canguros que
                             ingresen a nuestro establecimiento. Esto nos garantiza una estadía segura para todos. </li>
-                        <li>Nuestro personal realizará una inspección de todas las mochilas, bolsos, morrales y canguros que
-                            ingresen a nuestro establecimiento. Esto nos garantiza una estadía segura para todos. </li>
                         <li>Por seguridad, no está permitido el ingreso de alimentos, bebidas, mascotas, armas, pelotas,
                             globos, inflables, colores, cigarros, instrumentos musicales, juegos de propulsión a chorro de
                             agua, megáfonos, triciclos, bicicletas, scooters, skates, patines, carritos, envases de vidrio,
