@@ -280,9 +280,9 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url('/') }}">Inicio</a>
                         </li>
-                        <li class="nav-item">
+                        <!--<li class="nav-item">
                             <a class="nav-link" href="{{ route('socios') }}">Socios</a>
-                        </li>
+                        </li>-->
                         @if (Auth::guard('client')->check())
                             @php
                                 $client = Auth::guard('client')->user();
