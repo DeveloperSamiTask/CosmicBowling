@@ -29,7 +29,8 @@ let selectedButtonId = null,
     line = 1,
     globalDiscount = 0,
     globalDiscountType = "",
-    plane = "";
+    plane = "",
+    currentCalendarItems = [];
 insurancePrice = 0;
 
 generateRadioButtons(calendarItems);
@@ -234,33 +235,27 @@ function handleRadioChange(selectedRadio) {
 }
 
 function checkRadioButtonStatus(value) {
-    const radioButtons = document.querySelectorAll('input[type="radio"]');
-    let status = false;
+    const interval = currentCalendarItems.find((item) => item.hour == value);
 
-    radioButtons.forEach((radioButton) => {
-        if (radioButton.value == value) {
-            status = !radioButton.disabled;
-        }
-    });
-
-    return status;
+    return Boolean(interval && Number(interval.available) > 0);
 }
 
 // ----------------///
 function generateRadioButtons(calendarItems) {
     const container = document.getElementById("radioContainer");
     container.innerHTML = "";
+    currentCalendarItems = calendarItems;
 
     if (calendarItems.length == 0) {
         showNoScheduleCard(container);
     }
 
-    // Filtra los elementos para excluir aquellos con la hora '23:00:00'
-    const filteredItems = calendarItems.filter(
-        (item) => item.hour !== "23:00:00"
-    );
+    // El último intervalo es un bloque auxiliar de disponibilidad:
+    // permite completar la última reserva de una hora, pero no debe
+    // mostrarse como una hora desde la que el cliente pueda empezar.
+    const filteredItems = calendarItems.slice(0, -1);
 
-    calendarItems.forEach((item) => {
+    filteredItems.forEach((item) => {
         const formattedTime = formatTime(item.hour);
 
         const radioInput = document.createElement("input");
