@@ -147,8 +147,12 @@
                                     <span class="input-group-text align-self-start mt-1">
                                         <i class="ai-message"></i>
                                     </span>
-                                    <textarea id="observation" class="form-control" rows="3" placeholder="Observaciones"></textarea>
+                                    <textarea id="observation" class="form-control" rows="3" maxlength="1000"
+                                        placeholder="Observaciones"></textarea>
                                 </div>
+                                <small id="observation-counter" class="d-block text-end text-body-secondary mt-1">
+                                    0 / 1000 caracteres
+                                </small>
                             </h3>
                         </div>
 
@@ -908,5 +912,5 @@
 
         const calendarItems = @json($hours);
     </script>
-    <script src="{{ asset('frontend/js/pages/cart.js') }}"></script>
+    <script src="{{ asset('frontend/js/pages/cart.js') }}?v={{ filemtime(public_path('frontend/js/pages/cart.js')) }}"></script>
 @endsection

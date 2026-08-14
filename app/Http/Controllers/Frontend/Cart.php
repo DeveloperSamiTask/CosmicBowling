@@ -126,6 +126,11 @@ class Cart extends Controller
 
     public function billingData(Request $request)
     {
+        $validated = $request->validate([
+            'observation' => ['nullable', 'string', 'max:1000'],
+        ]);
+
+        $observation = $validated['observation'] ?? null;
         $sessionData = $request->json()->all();
         session()->forget('billing');
         $client = Auth::guard('client')->user();
@@ -155,7 +160,7 @@ class Cart extends Controller
                 'document' => $sunatDescription,
                 'days_registered' => $daysRegistered,
                 'frequency' => $frequency,
-                'observation' => $request->input('observation')
+                'observation' => $observation
             ];
 
             // Combinar los datos de la sesión con los datos del cliente
@@ -175,7 +180,7 @@ class Cart extends Controller
                 'document' => $sunatDescription,
                 'days_registered' => $daysRegistered,
                 'frequency' => $frequency,
-                'observation' => $request->input('observation')
+                'observation' => $observation
             ];
 
             $combinedData = array_merge($sessionData, $clientData);
@@ -373,7 +378,7 @@ class Cart extends Controller
 
         // Retornar los IDs de los intervalos disponibles
         return $intervalsAvailability;
-    }
+    } 
 
     public function showFormPayment($amount, $purchaseNumber)
     {
