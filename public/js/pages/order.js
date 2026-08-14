@@ -139,6 +139,7 @@ $(function () {
                 { data: "rsocial" },
                 { data: "dir" },
                 { data: "sure" },
+                { data: "observation" },
                 { data: "status" },
             ],
             columnDefs: [
@@ -205,6 +206,25 @@ $(function () {
                         return e == 1
                             ? '<span class="badge bg-success">Activo</span>'
                             : '<span class="badge bg-secondary">Inactivo</span>';
+                    },
+                },
+                {
+                    targets: 15,
+                    searchable: false,
+                    orderable: false,
+                    className: "text-center",
+                    render: function (data, type, row) {
+                        if (type !== "display") {
+                            return data || "";
+                        }
+
+                        if (!data || !data.trim()) {
+                            return '<span class="badge bg-label-secondary">Sin observación</span>';
+                        }
+
+                        return `<button type="button" class="btn btn-sm btn-label-primary datatable_observation" data-booking-id="${row.id}">
+                            <i class="mdi mdi-message-text-outline me-1"></i>Ver
+                        </button>`;
                     },
                 },
                 {
@@ -469,7 +489,7 @@ $(function () {
                 $("#shift2").text(contadorShift2);
 
                 this.api()
-                    .columns(15)
+                    .columns(16)
                     .every(function () {
                         var t = this,
                             a = $(
@@ -520,6 +540,25 @@ $(function () {
         $("#invoiceText").val(rowData.invoice);
 
         $("#invoiceModal").modal("show");
+    });
+
+    e.on("click", ".datatable_observation", function () {
+        const bookingId = String($(this).data("booking-id"));
+        const rowData = e
+            .rows(function (index, data) {
+                return String(data.id) === bookingId;
+            })
+            .data()[0];
+
+        if (!rowData) {
+            return;
+        }
+
+        $("#observationReservationCode").text(rowData.code);
+        $("#observationContent").text(
+            rowData.observation || "Sin observación registrada."
+        );
+        $("#observationModal").modal("show");
     });
 
     const f = document.getElementById("invoiceForm");

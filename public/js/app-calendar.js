@@ -278,12 +278,11 @@ isRtl && (direction = "rtl"),
                         y.classList.add("btn-update-event"),
                         y.classList.remove("btn-add-event"),
                         S.classList.remove("d-none"),
-                        (E.value =
-                            a.title + " (" + a.extendedProps.quantity + ")"),
-                        d.setDate(a.start, !0, "Y-m-d"),
+                        (E.value = a.title.replace(/\s*\(\d+\)\s*$/, "")),
+                        d.setDate(a.start, !0, "Y-m-d H:i"),
                         null !== a.end
-                            ? o.setDate(a.end, !0, "Y-m-d")
-                            : o.setDate(a.start, !0, "Y-m-d"),
+                            ? o.setDate(a.end, !0, "Y-m-d H:i")
+                            : o.setDate(a.start, !0, "Y-m-d H:i"),
                         q.val(a.extendedProps.calendar).trigger("change"),
                         void 0 !== a.extendedProps.price &&
                             (M.value = a.extendedProps.price),
@@ -353,34 +352,43 @@ isRtl && (direction = "rtl"),
                     h.addEventListener("click", (e) => {
                         L.classList.remove("d-none");
                     }),
-                y.addEventListener("click", (e) => {
-                    var t, n;
+                y.addEventListener("click", async (e) => {
+                    e.preventDefault();
+
+                    const validationStatus = await fv.validate();
+                    if (validationStatus !== "Valid") {
+                        return;
+                    }
+
                     if (y.classList.contains("btn-add-event")) {
-                        r &&
-                            insert().then((newId) => {
-                                n = {
-                                    id: newId,
-                                    title: E.value,
-                                    start: k.value,
-                                    end: w.value,
-                                    startStr: k.value,
-                                    endStr: w.value,
-                                    display: "block",
-                                    extendedProps: {
-                                        calendar: q.val(),
-                                        price: M.value,
-                                        quantity: Z.value,
-                                    },
-                                };
-                                l.push(n);
-                                i.refetchEvents();
-                                C.hide();
-                            });
+                        try {
+                            const newId = await insert();
+                            const newEvent = {
+                                id: newId,
+                                title: `${E.value} (${Z.value})`,
+                                start: k.value,
+                                end: w.value,
+                                startStr: k.value,
+                                endStr: w.value,
+                                display: "block",
+                                extendedProps: {
+                                    calendar: q.val(),
+                                    price: M.value,
+                                    quantity: Z.value,
+                                },
+                            };
+                            l.push(newEvent);
+                            i.refetchEvents();
+                            C.hide();
+                        } catch (error) {
+                            // insert() ya muestra el mensaje de error.
+                        }
                     } else {
-                        r &&
-                            ((n = {
+                        try {
+                            await update(a.id);
+                            const updatedEvent = {
                                 id: a.id,
-                                title: E.value,
+                                title: `${E.value} (${Z.value})`,
                                 start: k.value,
                                 end: w.value,
                                 extendedProps: {
@@ -391,22 +399,37 @@ isRtl && (direction = "rtl"),
 
                                 display: "block",
                                 allDay: "0",
-                            }),
-                            ((t = n).id = parseInt(t.id)),
-                            (l[l.findIndex((e) => e.id === t.id)] = t),
-                            i.refetchEvents(),
-                            C.hide(),
-                            update(a.id));
+                            };
+                            updatedEvent.id = parseInt(updatedEvent.id);
+                            l[
+                                l.findIndex(
+                                    (event) => event.id === updatedEvent.id
+                                )
+                            ] = updatedEvent;
+                            i.refetchEvents();
+                            C.hide();
+                        } catch (error) {
+                            // update() ya muestra el mensaje de error.
+                        }
                     }
                 }),
                 S.addEventListener("click", (e) => {
-                    var t;
-                    (t = parseInt(a.id)),
-                        (l = l.filter(function (e) {
-                            return e.id != t;
-                        })),
-                        i.refetchEvents(),
+                    if (
+                        !window.confirm(
+                            "¿Seguro que deseas borrar este horario y todos sus intervalos?"
+                        )
+                    ) {
+                        return;
+                    }
+
+                    const eventId = parseInt(a.id);
+                    removeEvent(eventId).then(() => {
+                        l = l.filter(function (e) {
+                            return e.id != eventId;
+                        });
+                        i.refetchEvents();
                         C.hide();
+                    }).catch(() => {});
                 }),
                 p.addEventListener("hidden.bs.offcanvas", function () {
                     u();
@@ -516,7 +539,76 @@ isRtl && (direction = "rtl"),
             });
         }
         function update(id) {
-            console.log(id);
+            blockUI();
+
+            const eventLabelSelect = document.getElementById("eventLabel");
+            const dataId =
+                eventLabelSelect.selectedOptions[0].getAttribute("data-id");
+            const formData = new FormData(c);
+            formData.append("data-id", dataId);
+
+            return fetch(`updateHours/${id}`, {
+                method: "POST",
+                body: formData,
+            })
+                .then(async (response) => {
+                    const data = await response.json();
+                    if (!response.ok) {
+                        throw new Error(
+                            data.message || "No se pudo actualizar el horario."
+                        );
+                    }
+                    Toast.fire({
+                        icon: "success",
+                        title: data.message,
+                    });
+                    return data;
+                })
+                .catch((error) => {
+                    Toast.fire({
+                        icon: "warning",
+                        title: error.message,
+                    });
+                    throw error;
+                })
+                .finally(() => {
+                    $.unblockUI();
+                });
+        }
+
+        function removeEvent(id) {
+            blockUI();
+
+            return fetch(`deleteHours/${id}`, {
+                method: "DELETE",
+                headers: {
+                    Accept: "application/json",
+                    "X-CSRF-TOKEN": csrfToken,
+                },
+            })
+                .then(async (response) => {
+                    const data = await response.json();
+                    if (!response.ok) {
+                        throw new Error(
+                            data.message || "No se pudo eliminar el horario."
+                        );
+                    }
+                    Toast.fire({
+                        icon: "success",
+                        title: data.message,
+                    });
+                    return data;
+                })
+                .catch((error) => {
+                    Toast.fire({
+                        icon: "warning",
+                        title: error.message,
+                    });
+                    throw error;
+                })
+                .finally(() => {
+                    $.unblockUI();
+                });
         }
 
         function checkHoliday(date) {

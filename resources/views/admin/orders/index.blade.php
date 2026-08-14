@@ -114,6 +114,7 @@
                             <th>Razón Social</th>
                             <th>Dirección</th>
                             <th>Seguro</th>
+                            <th>Observación</th>
                             <th>Estado</th>
                         </tr>
                     </thead>
@@ -160,6 +161,23 @@
         </div>
     </div>
     <!--/ Enable OTP Modal -->
+
+    <div class="modal fade" id="observationModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Observación de la reserva <code id="observationReservationCode"></code></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <p id="observationContent" class="mb-0" style="white-space: pre-wrap; overflow-wrap: anywhere;"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection()
 
 @section('styles')
@@ -168,5 +186,5 @@
 
 @section('scripts')
     <script src="{{ asset('vendor/libs/flatpickr/flatpickr.js') }}"></script>
-    <script src="{{ asset('js/pages/order.js') }}"></script>
+    <script src="{{ asset('js/pages/order.js') }}?v={{ filemtime(public_path('js/pages/order.js')) }}"></script>
 @endsection

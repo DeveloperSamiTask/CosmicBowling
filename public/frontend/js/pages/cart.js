@@ -29,7 +29,9 @@ let selectedButtonId = null,
     line = 1,
     globalDiscount = 0,
     globalDiscountType = "",
-    plane = "";
+    plane = "",
+    currentCalendarItems = [],
+    guestsRequestId = 0;
 insurancePrice = 0;
 
 generateRadioButtons(calendarItems);
@@ -38,8 +40,15 @@ function priceLeft(lane, shoe, cPrice, cShoe, lines) {
     document.getElementById("tabBilling").classList.add("disabled");
     document.getElementById("tabPayment").classList.add("disabled");
 
-    plane = lane * cPrice * line;
-    const pShoe = shoe * cShoe;
+    const laneCount = Number(lines);
+    const safeLaneCount = Number.isFinite(laneCount) ? laneCount : line;
+    const laneHours = Number(lane) || 0;
+    const lanePrice = Number(cPrice) || 0;
+    const guestCount = Number(shoe) || 0;
+    const shoePrice = Number(cShoe) || 0;
+
+    plane = laneHours * lanePrice * safeLaneCount;
+    const pShoe = guestCount * shoePrice;
 
     let discountAmount = 0;
 
@@ -198,6 +207,7 @@ function handleRadioChange(selectedRadio) {
 
     selectedButtonId = selectedRadio.id;
     const buttonNumber = selectedRadio.value;
+    selectHour = 1;
     sessionStorage.setItem("time", buttonNumber);
     sessionStorage.setItem("hours", 1);
 
@@ -218,11 +228,14 @@ function handleRadioChange(selectedRadio) {
         selectedDate,
         buttonNumber,
         oneHourLater,
-        twoHoursLater,
-        threeHoursLater
+        null,
+        null
     );
 
-    const selectGuests = inputGuests.value;
+    const selectGuests = Math.max(1, parseInt(inputGuests.value, 10) || 1);
+    inputGuests.value = selectGuests;
+    line = getLaneCount(selectGuests);
+    labelLine.innerHTML = line;
     document.getElementById("l-date").innerHTML = dateTime;
     document.getElementById("l-hours").innerHTML = " X 1 hora:";
     document.getElementById(
@@ -234,33 +247,27 @@ function handleRadioChange(selectedRadio) {
 }
 
 function checkRadioButtonStatus(value) {
-    const radioButtons = document.querySelectorAll('input[type="radio"]');
-    let status = false;
+    const interval = currentCalendarItems.find((item) => item.hour == value);
 
-    radioButtons.forEach((radioButton) => {
-        if (radioButton.value == value) {
-            status = !radioButton.disabled;
-        }
-    });
-
-    return status;
+    return Boolean(interval && Number(interval.available) > 0);
 }
 
 // ----------------///
 function generateRadioButtons(calendarItems) {
     const container = document.getElementById("radioContainer");
     container.innerHTML = "";
+    currentCalendarItems = calendarItems;
 
     if (calendarItems.length == 0) {
         showNoScheduleCard(container);
     }
 
-    // Filtra los elementos para excluir aquellos con la hora '23:00:00'
-    const filteredItems = calendarItems.filter(
-        (item) => item.hour !== "23:00:00"
-    );
+    // El último intervalo es un bloque auxiliar de disponibilidad:
+    // permite completar la última reserva de una hora, pero no debe
+    // mostrarse como una hora desde la que el cliente pueda empezar.
+    const filteredItems = calendarItems.slice(0, -1);
 
-    calendarItems.forEach((item) => {
+    filteredItems.forEach((item) => {
         const formattedTime = formatTime(item.hour);
 
         const radioInput = document.createElement("input");
@@ -328,6 +335,12 @@ const getProductCalendar = async (subcategory, date) => {
 
 const updateUI = async () => {
     try {
+        guestsRequestId++;
+        selectedButtonId = null;
+        selectHour = 1;
+        line = 1;
+        inputGuests.value = Math.max(1, parseInt(inputGuests.value, 10) || 1);
+        inputGuests.removeAttribute("max");
         sessionStorage.removeItem("time");
         sessionStorage.removeItem("hours");
         sessionStorage.removeItem("guests");
@@ -357,6 +370,8 @@ const updateUI = async () => {
 };
 
 const updateGuests = async (date, one, two, three, four) => {
+    const requestId = ++guestsRequestId;
+
     try {
         const response = await fetch(`/updateGuests`, {
             method: "POST",
@@ -372,13 +387,17 @@ const updateGuests = async (date, one, two, three, four) => {
         }
 
         const data = await response.json();
+        if (requestId !== guestsRequestId) {
+            return data;
+        }
+
         localStorage.setItem("limit", data.limit);
         inputGuests.max = data.calculated;
 
         if (parseInt(inputGuests.value) > data.calculated) {
             inputGuests.value = data.calculated;
             guests.innerHTML = ` ${typeLane} <strong> X ${data.calculated} Invitados </strong>`;
-            line = Math.ceil(inputGuests.value / data.limit);
+            line = getLaneCount(data.calculated);
             labelLine.innerHTML = line;
 
             console.log(line);
@@ -395,7 +414,6 @@ const updateGuests = async (date, one, two, three, four) => {
                 line
             );
         }
-        limitRound;
         return data;
     } catch (error) {
         console.error("Error al obtener la data:", error);
@@ -463,6 +481,17 @@ const getCoupon = async (code) => {
     }
 };
 
+function getLaneCount(guestCount) {
+    const parsedGuestCount = Number(guestCount) || 0;
+    const guestLimit = Number(localStorage.getItem("limit"));
+
+    if (parsedGuestCount <= 0) {
+        return 0;
+    }
+
+    return guestLimit > 0 ? Math.ceil(parsedGuestCount / guestLimit) : 1;
+}
+
 const LabelGuests = () => {
     const selectGuests = parseInt(inputGuests.value) || 0; // Asegúrate de que sea un número
     sessionStorage.setItem("guests", selectGuests);
@@ -472,7 +501,7 @@ const LabelGuests = () => {
         const selectedPrice = document
             .getElementById(selectedButtonId)
             .getAttribute("data-price");
-        line = Math.ceil(selectGuests / localStorage.getItem("limit"));
+        line = getLaneCount(selectGuests);
         labelLine.innerHTML = line;
         priceLeft(selectHour, selectGuests, selectedPrice, priceShoe, line); // Calcula el precio
     } else {
@@ -549,7 +578,7 @@ radioHours.forEach((hours) => {
                         .getAttribute("data-price");
 
                     // Calcular el número de pistas basado en la cantidad de invitados
-                    line = Math.ceil(selectGuests / 5); // Divide por 5 y redondea hacia arriba
+                    line = getLaneCount(selectGuests);
 
                     // Actualizar el número de pistas en el DOM
                     labelLine.innerHTML = line;
@@ -559,7 +588,8 @@ radioHours.forEach((hours) => {
                         selectHour,
                         selectGuests,
                         selectedPrice,
-                        priceShoe
+                        priceShoe,
+                        line
                     ); // Llamar a la función con el número de pistas
                 } else {
                     console.error(
@@ -737,6 +767,21 @@ document.addEventListener("DOMContentLoaded", function () {
             delay: 5000,
         }
     );
+    const observationMaxLength = 1000;
+    const observationCounter = document.getElementById("observation-counter");
+
+    const updateObservationCounter = () => {
+        const currentLength = observation.value.length;
+        observationCounter.textContent = `${currentLength} / ${observationMaxLength} caracteres`;
+        observationCounter.classList.toggle(
+            "text-danger",
+            currentLength >= observationMaxLength
+        );
+    };
+
+    observation.addEventListener("input", updateObservationCounter);
+    updateObservationCounter();
+
     function handleButtonClick() {
         let sessionArray = [];
 
@@ -836,6 +881,17 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function updateSummaryAndProceed() {
+        if (
+            observation.value.length > observationMaxLength ||
+            observation.validity.tooLong
+        ) {
+            document.getElementById("subjectWarning").textContent =
+                `La observación no puede superar los ${observationMaxLength} caracteres.`;
+            wToast.show();
+            observation.focus();
+            return;
+        }
+
         const summaryContainer = document.querySelector(".position-md-sticky");
         const clonedSummary = summaryContainer.cloneNode(true);
         const targetContainer = document.getElementById(
@@ -928,6 +984,16 @@ document.addEventListener("DOMContentLoaded", function () {
                 rowB = sessionData.billing;
                 rowc = sessionData.cart;
 
+                document
+                    .getElementById("tabPayment")
+                    .classList.remove("disabled");
+                document.getElementById("tabPayment").click();
+
+                window.scrollTo({
+                    top: 0,
+                    behavior: "smooth",
+                });
+
                 if (rowB.type == "Boleta") {
                     document.getElementById("typeDoc").innerHTML = `BOLETA A: `;
                     document.getElementById(
@@ -985,14 +1051,6 @@ document.addEventListener("DOMContentLoaded", function () {
             .finally(() => {
                 preloader.classList.add("hidden");
             });
-
-        document.getElementById("tabPayment").classList.remove("disabled");
-        document.getElementById("tabPayment").click();
-
-        window.scrollTo({
-            top: 0,
-            behavior: "smooth",
-        });
     }
 
     function getPayment() {
