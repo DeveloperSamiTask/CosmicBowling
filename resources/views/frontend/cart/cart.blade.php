@@ -147,8 +147,12 @@
                                     <span class="input-group-text align-self-start mt-1">
                                         <i class="ai-message"></i>
                                     </span>
-                                    <textarea id="observation" class="form-control" rows="3" placeholder="Observaciones"></textarea>
+                                    <textarea id="observation" class="form-control" rows="3" maxlength="1000"
+                                        placeholder="Observaciones"></textarea>
                                 </div>
+                                <small id="observation-counter" class="d-block text-end text-body-secondary mt-1">
+                                    0 / 1000 caracteres
+                                </small>
                             </h3>
                         </div>
 
@@ -785,8 +789,6 @@
                             la zona de billar o arcade).</li>
                         <li>Nuestro personal realizará una inspección de todas las mochilas, bolsos, morrales y canguros que
                             ingresen a nuestro establecimiento. Esto nos garantiza una estadía segura para todos. </li>
-                        <li>Nuestro personal realizará una inspección de todas las mochilas, bolsos, morrales y canguros que
-                            ingresen a nuestro establecimiento. Esto nos garantiza una estadía segura para todos. </li>
                         <li>Por seguridad, no está permitido el ingreso de alimentos, bebidas, mascotas, armas, pelotas,
                             globos, inflables, colores, cigarros, instrumentos musicales, juegos de propulsión a chorro de
                             agua, megáfonos, triciclos, bicicletas, scooters, skates, patines, carritos, envases de vidrio,
@@ -908,5 +910,5 @@
 
         const calendarItems = @json($hours);
     </script>
-    <script src="{{ asset('frontend/js/pages/cart.js') }}"></script>
+    <script src="{{ asset('frontend/js/pages/cart.js') }}?v={{ filemtime(public_path('frontend/js/pages/cart.js')) }}"></script>
 @endsection

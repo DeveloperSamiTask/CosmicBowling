@@ -31,7 +31,7 @@ Route::get('/', [AuthController::class, 'index'])->name('admin.login');
 Route::post('/auth', [AuthController::class, 'authenticate'])->name('admin.login.post');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-// Rutas protegidas por autenticaciÃ³n
+// Rutas protegidas por autenticaci¨®n
 Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
@@ -67,6 +67,8 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('calendario', 'index')->name('calendar.index');
         Route::get('schemaEvents', 'show');
         Route::post('insertHours', 'store');
+        Route::post('updateHours/{calendar}', 'update');
+        Route::delete('deleteHours/{calendar}', 'destroy');
     });
 
     Route::controller(CouponsController::class)->group(function ($route) {

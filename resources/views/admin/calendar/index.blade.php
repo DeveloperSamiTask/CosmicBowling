@@ -130,7 +130,7 @@
                                 <div class="form-floating form-floating-outline mb-4">
                                     <input type="text" class="form-control" id="eventEndDate" name="eventEndDate"
                                         placeholder="End Date">
-                                    <label for="eventEndDate">Hora Fin</label>
+                                    <label for="eventEndDate">Último turno</label>
                                 </div>
 
                                 <div class="form-floating form-floating-outline mb-4">
