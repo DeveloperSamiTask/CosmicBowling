@@ -11,12 +11,17 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+use Throwable;
 
 class SendPaymentSummaryMail implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     protected $data;
+
+    public $tries = 5;
+
+    public $timeout = 60;
 
     public function __construct($data)
     {
@@ -39,5 +44,20 @@ class SendPaymentSummaryMail implements ShouldQueue
             // Si quieres reintentar luego, puedes lanzar la excepción
             throw $e;
         }
+    }
+
+    public function backoff(): array
+    {
+        return [60, 300, 900, 1800];
+    }
+
+    public function failed(Throwable $exception): void
+    {
+        Log::critical('Falló definitivamente el correo de una reserva', [
+            'email' => $this->data['email'] ?? null,
+            'purchase_number' => $this->data['purchaseNumber'] ?? null,
+            'reservation_code' => $this->data['code'] ?? null,
+            'error' => $exception->getMessage(),
+        ]);
     }
 }
