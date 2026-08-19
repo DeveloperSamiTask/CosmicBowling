@@ -2,6 +2,7 @@
 
 namespace App\Models\Admin;
 
+use App\Models\LoyaltyMovement;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -15,6 +16,11 @@ class Cart extends Model
     public function subcategory()
     {
         return $this->belongsTo(SubCategories::class, 'subcategory_id');
+    }
+
+    public function loyaltyMovement()
+    {
+        return $this->hasOne(LoyaltyMovement::class, 'cart_id', 'id_cart');
     }
 
     /**
