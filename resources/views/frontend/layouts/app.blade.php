@@ -280,6 +280,11 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url('/') }}">Inicio</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ session()->has('loyalty_portal_client_id') ? route('loyalty.portal.card') : route('loyalty.portal.login') }}">
+                                Mi tarjeta
+                            </a>
+                        </li>
                         <!--<li class="nav-item">
                             <a class="nav-link" href="{{ route('socios') }}">Socios</a>
                         </li>-->

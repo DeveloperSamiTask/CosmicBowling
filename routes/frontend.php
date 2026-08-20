@@ -7,6 +7,7 @@ use App\Http\Controllers\Frontend\Cart;
 use App\Http\Controllers\Frontend\Client;
 use App\Http\Controllers\Frontend\Payment;
 use App\Http\Controllers\Frontend\TestView;
+use App\Http\Controllers\Frontend\LoyaltyPortalController;
 use Illuminate\Http\Request;
 
 /*
@@ -21,6 +22,15 @@ use Illuminate\Http\Request;
 */
 
 Route::get('/', [Home::class, 'index'])->name('home.index');
+
+Route::controller(LoyaltyPortalController::class)->group(function () {
+  Route::get('/Mi_Tarjeta', 'login')->name('loyalty.portal.login');
+  Route::post('/Mi_Tarjeta/acceder', 'authenticate')
+    ->middleware('throttle:10,1')
+    ->name('loyalty.portal.authenticate');
+  Route::get('/Mi_Tarjeta/tarjeta', 'card')->name('loyalty.portal.card');
+  Route::post('/Mi_Tarjeta/salir', 'logout')->name('loyalty.portal.logout');
+});
 
 Route::get('/socios', function () {
     return view('frontend.socios');
