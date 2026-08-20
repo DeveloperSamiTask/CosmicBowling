@@ -26,6 +26,8 @@ class Client extends Authenticatable
         'birthday_client',
         'address_client',
         'password_client',
+        'registration_source',
+        'web_account_completed_at',
 
         //nuevos campos : borrar validacion
         'validacion',

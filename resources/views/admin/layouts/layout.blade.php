@@ -121,6 +121,25 @@
                             </a>
                         </li>
 
+                        <li class="menu-item">
+                            <a href="javascript:void(0);" class="menu-link menu-toggle">
+                                <i class="menu-icon tf-icons mdi mdi-card-account-details-star-outline"></i>
+                                <div>Fidelización</div>
+                            </a>
+                            <ul class="menu-sub">
+                                <li class="menu-item">
+                                    <a href="{{ url('/be/Fidelizacion') }}" class="menu-link">
+                                        <div>Registrar compra</div>
+                                    </a>
+                                </li>
+                                <li class="menu-item">
+                                    <a href="{{ url('/be/Fidelizacion/Clientes') }}" class="menu-link">
+                                        <div>Clientes y premios</div>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+
                         <!-- Boxes -->
                         <li class="menu-header fw-medium mt-4">
                             <span class="menu-header-text" data-i18n="Master Products">Master Products</span>

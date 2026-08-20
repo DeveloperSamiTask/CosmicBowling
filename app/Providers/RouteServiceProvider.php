@@ -31,6 +31,7 @@ class RouteServiceProvider extends ServiceProvider
         $this->mapApiRoutes();
         $this->mapFrontendRoutes();
         $this->mapAdminRoutes();
+        $this->mapLoyaltyRoutes();
     }
 
     /**
@@ -61,6 +62,13 @@ class RouteServiceProvider extends ServiceProvider
             ->prefix('be')
             ->namespace('App\Http\Controllers\Admin')
             ->group(base_path('routes/admin.php'));
+    }
+
+    protected function mapLoyaltyRoutes()
+    {
+        Route::middleware(['web'])
+            ->prefix('be')
+            ->group(base_path('routes/loyalty.php'));
     }
 
     /**

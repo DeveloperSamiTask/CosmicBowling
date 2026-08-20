@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Admin\SubCategories;
 use App\Models\Frontend\Client;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -12,8 +13,11 @@ class LoyaltyManualPurchase extends Model
 
     protected $fillable = [
         'client_id',
+        'subcategory_id',
         'receipt_number',
         'total_hours',
+        'quantity_lane',
+        'quantity_hours',
         'amount',
         'purchased_at',
         'registered_by',
@@ -22,6 +26,8 @@ class LoyaltyManualPurchase extends Model
 
     protected $casts = [
         'total_hours' => 'integer',
+        'quantity_lane' => 'integer',
+        'quantity_hours' => 'integer',
         'amount' => 'decimal:2',
         'purchased_at' => 'datetime',
     ];
@@ -29,6 +35,11 @@ class LoyaltyManualPurchase extends Model
     public function client()
     {
         return $this->belongsTo(Client::class, 'client_id', 'id_client');
+    }
+
+    public function subcategory()
+    {
+        return $this->belongsTo(SubCategories::class, 'subcategory_id', 'id_subcategory');
     }
 
     public function registeredBy()
