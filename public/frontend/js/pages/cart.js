@@ -784,7 +784,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function handleButtonClick() {
         let sessionArray = [];
-mp de
+
         for (let i = 0; i < sessionStorage.length; i++) {
             let key = sessionStorage.key(i);
             let value = sessionStorage.getItem(key);
