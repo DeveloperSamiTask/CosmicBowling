@@ -45,4 +45,19 @@ class User extends Authenticatable
         }
         return $data;
     }
+
+    public function registeredLoyaltyPurchases()
+    {
+        return $this->hasMany(LoyaltyManualPurchase::class, 'registered_by');
+    }
+
+    public function registeredLoyaltyMovements()
+    {
+        return $this->hasMany(LoyaltyMovement::class, 'registered_by');
+    }
+
+    public function redeemedLoyaltyRewards()
+    {
+        return $this->hasMany(LoyaltyReward::class, 'redeemed_by');
+    }
 }

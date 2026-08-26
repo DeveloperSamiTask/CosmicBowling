@@ -2,6 +2,8 @@
 
 namespace App\Models\Frontend;
 
+use App\Models\LoyaltyCard;
+use App\Models\LoyaltyManualPurchase;
 use App\Models\Admin\SunatTypeDoc;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Laravel\Sanctum\HasApiTokens;
@@ -24,6 +26,8 @@ class Client extends Authenticatable
         'birthday_client',
         'address_client',
         'password_client',
+        'registration_source',
+        'web_account_completed_at',
 
         //nuevos campos : borrar validacion
         'validacion',
@@ -47,6 +51,16 @@ class Client extends Authenticatable
     {
         // Un cliente tiene un registro de socio
         return $this->hasOne(ClientSocio::class, 'client_id', 'id_client');
+    }
+
+    public function loyaltyCard()
+    {
+        return $this->hasOne(LoyaltyCard::class, 'client_id', 'id_client');
+    }
+
+    public function loyaltyManualPurchases()
+    {
+        return $this->hasMany(LoyaltyManualPurchase::class, 'client_id', 'id_client');
     }
 
     // public function proxy() {

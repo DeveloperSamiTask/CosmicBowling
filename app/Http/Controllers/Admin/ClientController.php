@@ -13,6 +13,9 @@ use App\Models\Frontend\Proxy;
 
 class ClientController extends Controller
 {
+
+
+
     public function index()
     {
         $data['title'] = "Cliente";
@@ -27,6 +30,8 @@ class ClientController extends Controller
         $data['title'] = "Cliente";
         return view('admin.client.indexSocio', $data);
     }
+
+  
 
     public function show()
     {
