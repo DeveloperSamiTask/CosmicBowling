@@ -147,8 +147,7 @@
                                     <span class="input-group-text align-self-start mt-1">
                                         <i class="ai-message"></i>
                                     </span>
-                                    <textarea id="observation" class="form-control" rows="3" maxlength="1000"
-                                        placeholder="Observaciones"></textarea>
+                                    <textarea id="observation" class="form-control" rows="3" maxlength="1000" placeholder="Observaciones"></textarea>
                                 </div>
                                 <small id="observation-counter" class="d-block text-end text-body-secondary mt-1">
                                     0 / 1000 caracteres
@@ -205,7 +204,8 @@
                                             0.00</span>
                                     </li>
                                     <li class="d-flex justify-content-between mb-2">
-                                        <span id="l-sure"></span> <span class="fw-semibold ms-2" id="lp-sure"></span>
+                                        <span id="l-sure"></span> <span class="fw-semibold ms-2"
+                                            id="lp-sure"></span>
                                     </li>
                                 </ul>
                                 <div class="d-flex align-items-center justify-content-between border-top fs-xl pt-4">
@@ -762,6 +762,7 @@
 
                         <li>Las pistas se activan a la hora de la reserva. Si llega tarde, podrá hacer uso del tiempo
                             restante.</li>
+                        <li>Las pistas Easy Duo y VIP no cuentan con zona de espectador .</li>
                         <li>Se recomienda estar en el local 20 minutos antes de la reserva.</li>
                         <li>La ubicación y asignación del número de la pista se asigna automáticamente por nuestro sistema
                             Brunswick. No se puede asignar una pista específica a solicitud del cliente. </li>
@@ -910,5 +911,6 @@
 
         const calendarItems = @json($hours);
     </script>
-    <script src="{{ asset('frontend/js/pages/cart.js') }}?v={{ filemtime(public_path('frontend/js/pages/cart.js')) }}"></script>
+    <script src="{{ asset('frontend/js/pages/cart.js') }}?v={{ filemtime(public_path('frontend/js/pages/cart.js')) }}">
+    </script>
 @endsection
