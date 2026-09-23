@@ -379,7 +379,7 @@ const updateGuests = async (date, one, two, three, four) => {
                 "Content-Type": "application/json",
                 "X-CSRF-TOKEN": csrfToken,
             },
-            body: JSON.stringify({ date, one, two, three, four }),
+            body: JSON.stringify({ date, subcategory: xwyz, one, two, three, four }),
         });
 
         if (!response.ok) {
@@ -391,13 +391,31 @@ const updateGuests = async (date, one, two, three, four) => {
             return data;
         }
 
-        localStorage.setItem("limit", data.limit);
-        inputGuests.max = data.calculated;
+        const calculatedGuests = Number(data.calculated) || 0;
 
-        if (parseInt(inputGuests.value) > data.calculated) {
-            inputGuests.value = data.calculated;
-            guests.innerHTML = ` ${typeLane} <strong> X ${data.calculated} Invitados </strong>`;
-            line = getLaneCount(data.calculated);
+        localStorage.setItem("limit", data.limit);
+
+        if (calculatedGuests < 1) {
+            inputGuests.max = 1;
+            inputGuests.value = 1;
+            const selectedPrice = document
+                .getElementById(selectedButtonId)
+                .getAttribute("data-price");
+
+            line = 1;
+            labelLine.innerHTML = line;
+            guests.innerHTML = ` ${typeLane} <strong> X 1 Invitados </strong>`;
+            sessionStorage.setItem("guests", 1);
+            priceLeft(selectHour, 1, selectedPrice || 0, priceShoe, line);
+            return data;
+        }
+
+        inputGuests.max = calculatedGuests;
+
+        if (parseInt(inputGuests.value) > calculatedGuests) {
+            inputGuests.value = calculatedGuests;
+            guests.innerHTML = ` ${typeLane} <strong> X ${calculatedGuests} Invitados </strong>`;
+            line = getLaneCount(calculatedGuests);
             labelLine.innerHTML = line;
 
             console.log(line);
