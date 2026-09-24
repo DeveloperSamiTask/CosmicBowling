@@ -151,7 +151,7 @@ class LoyaltyService
 
             return [
                 'client' => $client->fresh([
-                    'loyaltyCard.rewards' => fn ($query) => $query
+                    'loyaltyCard.rewards' => fn($query) => $query
                         ->where('status', LoyaltyReward::STATUS_PENDING)
                         ->orderBy('earned_at')
                         ->orderBy('id'),

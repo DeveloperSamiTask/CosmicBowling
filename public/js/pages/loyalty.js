@@ -37,10 +37,8 @@ $(function () {
 
     $('#openNewClientModal').on('click', () => openPurchaseModal(true));
     $('#openExistingPurchaseModal').on('click', () => openPurchaseModal(false));
-
     $('.loyalty-check-input').on('input', function () {
-        const hours = Number($('#quantityHours').val()) || 0;
-        $('#purchaseChecksPreview').text(hours);
+        $('#purchaseChecksPreview').text('1');
     });
 
     $('#loyaltyPurchaseForm').on('submit', async function (event) {
@@ -100,7 +98,7 @@ $(function () {
         $('#loyaltyModalTitle').text(isNewClient ? 'Registrar cliente y primera compra' : `Registrar compra de ${currentClient.full_name}`);
         ['lastnamePat', 'lastnameMat', 'namesClient', 'birthdayClient'].forEach(id => document.getElementById(id).required = isNewClient);
 
-        $('#purchaseChecksPreview').text('0');
+        $('#purchaseChecksPreview').text('1');
         renderPurchaseReward(isNewClient ? null : currentClient.next_reward);
         purchaseModal.show();
     }

@@ -34,6 +34,9 @@
                         </button>
                     </div>
                 </form>
+
+
+
             </div>
         </div>
 
@@ -82,7 +85,7 @@
         <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
-                    <div><h5 class="modal-title" id="loyaltyModalTitle">Registrar compra</h5><small class="text-muted">Cada hora de juego equivale a un check, sin importar la cantidad de pistas.</small></div>
+                    <div><h5 class="modal-title" id="loyaltyModalTitle">Registrar compra</h5><small class="text-muted">Cada compra registrada equivale a un check. La cantidad de horas queda como histórico.</small></div>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                 </div>
                 <form id="loyaltyPurchaseForm">

@@ -207,7 +207,7 @@ class LoyaltyController extends Controller
             'number_doc.regex' => 'El documento solo puede contener letras, números y guiones.',
         ]);
 
-        $data['total_hours'] = $data['quantity_hours'];
+        $data['total_hours'] = 1;
         $data['purchased_at'] = now();
         $data['amount'] = null;
 
