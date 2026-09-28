@@ -55,11 +55,22 @@ class LoyaltyService
                 $card = LoyaltyCard::create([
                     'client_id' => $client->id_client,
                     'card_number' => $this->generateCardNumber($client->id_client),
+                    'issued_at' => now()->toDateString(),
+                    'expires_at' => now()->addYear()->toDateString(),
                     'current_checks' => 0,
                     'total_checks' => 0,
                     'current_cycle' => 1,
                     'status' => LoyaltyCard::STATUS_ACTIVE,
                 ]);
+            } elseif (!$card->issued_at || !$card->expires_at) {
+                $issuedAt = $card->issued_at ?? $card->created_at ?? now();
+
+                $card->update([
+                    'issued_at' => $card->issued_at ?? $issuedAt->toDateString(),
+                    'expires_at' => $card->expires_at ?? $issuedAt->copy()->addYear()->toDateString(),
+                ]);
+
+                $card->refresh();
             }
 
             // Solo se puede consumir un premio que ya estaba pendiente antes de esta compra.
@@ -107,6 +118,18 @@ class LoyaltyService
                 'total_checks' => $card->total_checks + $data['total_hours'],
                 'current_cycle' => $cycle,
             ]);
+
+            $nextRewardWarning = null;
+
+            if ($balance === 4 || $balance === 9) {
+                $nextRewardWarning = [
+                    'current_checks' => $balance,
+                    'next_milestone' => $balance + 1,
+                    'message' => $balance === 4
+                        ? 'Con esta compra el cliente queda a 1 check del premio de 5.'
+                        : 'Con esta compra el cliente queda a 1 check del premio de 10.',
+                ];
+            }
 
             $movement = LoyaltyMovement::create([
                 'card_id' => $card->id,
@@ -168,6 +191,7 @@ class LoyaltyService
                         ->orderBy('id'),
                 ]),
                 'redeemed_reward' => $rewardToRedeem,
+                'next_reward_warning' => $nextRewardWarning,
             ];
         });
     }

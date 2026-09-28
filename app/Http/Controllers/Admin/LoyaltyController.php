@@ -229,6 +229,7 @@ class LoyaltyController extends Controller
                     'milestone' => $redeemedReward->milestone,
                     'name' => $redeemedReward->reward_name,
                 ] : null,
+                'next_reward_warning' => $result['next_reward_warning'],
             ], 201);
         } catch (ValidationException $exception) {
             return response()->json([

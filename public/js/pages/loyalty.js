@@ -61,7 +61,7 @@ $(function () {
             $('#loyaltyClientNotFound').addClass('d-none');
             $('#loyaltyClientResult').removeClass('d-none');
             purchaseModal.hide();
-            showMessage('success', data.message);
+            showMessage(data.next_reward_warning ? 'warning' : 'success', data.next_reward_warning?.message || data.message);
         } catch (error) {
             showMessage('error', firstError(error));
         } finally {

@@ -6,6 +6,8 @@
         $pendingRewards = $card ? $card->rewards->where('status', 'pending') : collect();
         $usedRewards = $card ? $card->rewards->where('status', 'used') : collect();
         $progress = $card ? min(100, max(0, $card->current_checks * 10)) : 0;
+        $issuedAt = $card?->issued_at ?? $card?->created_at;
+        $expiresAt = $card?->expires_at;
     @endphp
 
     <section class="container loyalty-portal pt-5 mt-5 pb-5">
@@ -54,6 +56,16 @@
                             <div>
                                 <p class="small text-white-50 mb-1">Número de tarjeta</p>
                                 <p class="loyalty-card-number mb-4">{{ $card->card_number }}</p>
+                                <div class="d-flex justify-content-between gap-3 mb-4">
+                                    <div>
+                                        <small class="text-white-50 d-block">Emisión</small>
+                                        <span class="fw-semibold">{{ $issuedAt ? $issuedAt->format('d/m/Y') : 'Pendiente' }}</span>
+                                    </div>
+                                    <div class="text-end">
+                                        <small class="text-white-50 d-block">Vencimiento</small>
+                                        <span class="fw-semibold">{{ $expiresAt ? $expiresAt->format('d/m/Y') : 'Pendiente' }}</span>
+                                    </div>
+                                </div>
                                 <div class="d-flex justify-content-between align-items-end">
                                     <div>
                                         <small class="text-white-50 d-block">Checks actuales</small>

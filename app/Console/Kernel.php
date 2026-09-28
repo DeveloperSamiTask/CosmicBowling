@@ -15,7 +15,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')->hourly();
+        $schedule->command('loyalty:expire-cards')->dailyAt('06:00')->withoutOverlapping();
     }
 
     /**
