@@ -121,6 +121,7 @@
                             </div>
                             <div class="col-md-3"><div class="form-floating form-floating-outline"><input type="number" class="form-control loyalty-check-input" id="quantityLane" name="quantity_lane" min="1" max="10" step="1" required placeholder="Pistas"><label for="quantityLane">Cantidad de pistas</label></div></div>
                             <div class="col-md-3"><div class="form-floating form-floating-outline"><input type="number" class="form-control loyalty-check-input" id="quantityHours" name="quantity_hours" min="1" max="12" step="1" required placeholder="Horas"><label for="quantityHours">Cantidad de horas</label></div></div>
+                            <div class="col-md-4"><div class="form-floating form-floating-outline"><input type="text" class="form-control" id="receiptNumber" name="receipt_number" maxlength="50" required placeholder="Numero de boleta"><label for="receiptNumber">Numero de boleta</label></div></div>
                             <div class="col-md-2"><div class="border rounded p-3 h-100 text-center"><small class="text-muted">Checks</small><h5 class="mb-0" id="purchaseChecksPreview">0</h5></div></div>
                             <div class="col-12"><div class="form-floating form-floating-outline"><textarea class="form-control" id="purchaseNotes" name="notes" maxlength="1000" style="height: 58px" placeholder="Observación"></textarea><label for="purchaseNotes">Observación (opcional)</label></div></div>
                         </div>
@@ -130,7 +131,7 @@
                             <p class="mb-0" id="purchaseRewardText"></p>
                         </div>
 
-                        <div class="alert alert-info mb-0">Confirma esta operación solamente después de completar el cobro en Wally. Por el momento no se solicitará el número de boleta.</div>
+                        <div class="alert alert-info mb-0">Confirma esta operación solamente después de completar el cobro en Wally e ingresar el numero de boleta.</div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>

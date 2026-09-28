@@ -9,6 +9,7 @@ use App\Models\LoyaltyMovement;
 use App\Models\LoyaltyReward;
 use App\Models\LoyaltyRewardCatalog;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
 
 class LoyaltyService
 {
@@ -33,6 +34,16 @@ class LoyaltyService
                     'email_client' => null,
                     'password_client' => null,
                     'registration_source' => 'atc',
+                ]);
+            }
+
+            $alreadyRegisteredToday = LoyaltyManualPurchase::where('client_id', $client->id_client)
+                ->whereDate('purchased_at', $data['purchased_at']->toDateString())
+                ->exists();
+
+            if ($alreadyRegisteredToday) {
+                throw ValidationException::withMessages([
+                    'number_doc' => 'Este cliente ya tiene una compra de fidelización registrada hoy. Podrá acumular otro check desde mañana.',
                 ]);
             }
 

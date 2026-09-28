@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
 use Throwable;
 
 class LoyaltyController extends Controller
@@ -183,7 +184,7 @@ class LoyaltyController extends Controller
         $data = $request->validate([
             'document_id' => ['required', Rule::exists('sunat_typedoc', 'id_doc')],
             'number_doc' => $this->documentNumberRules($documentType),
-            'receipt_number' => ['nullable', 'string', 'max:50', Rule::unique('loyalty_manual_purchases', 'receipt_number')],
+            'receipt_number' => ['required', 'string', 'max:50', Rule::unique('loyalty_manual_purchases', 'receipt_number')],
             'subcategory_id' => [
                 'required',
                 Rule::exists('subcategories', 'id_subcategory')->where(function ($query) {
@@ -201,6 +202,7 @@ class LoyaltyController extends Controller
             'address_client' => ['nullable', 'string', 'max:255'],
         ], [
             'receipt_number.unique' => 'Ese número de boleta ya fue registrado.',
+            'receipt_number.required' => 'Ingresa el número de boleta antes de registrar la compra.',
             'number_doc.digits' => $documentType === '06'
                 ? 'El RUC debe tener exactamente 11 dígitos.'
                 : 'El DNI debe tener exactamente 8 dígitos.',
@@ -212,8 +214,10 @@ class LoyaltyController extends Controller
         $data['amount'] = null;
 
         try {
+
             $result = $loyaltyService->registerManualPurchase($data, (int) auth()->id());
             $redeemedReward = $result['redeemed_reward'];
+
 
             return response()->json([
                 'message' => $redeemedReward
@@ -226,6 +230,11 @@ class LoyaltyController extends Controller
                     'name' => $redeemedReward->reward_name,
                 ] : null,
             ], 201);
+        } catch (ValidationException $exception) {
+            return response()->json([
+                'message' => $exception->validator->errors()->first(),
+                'errors' => $exception->errors(),
+            ], 422);
         } catch (QueryException $exception) {
             if ((string) $exception->getCode() === '23000') {
                 return response()->json([
